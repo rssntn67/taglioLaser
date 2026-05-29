@@ -28,7 +28,7 @@ export function calcolaMetriLineari(dxfContent: string): DxfCalcResult {
         break;
       }
       case 'ARC': {
-        // dxf-parser stores startAngle and endAngle already in radians
+        // dxf-parser converts DXF degree angles to radians automatically
         const arc = e as { radius: number; startAngle: number; endAngle: number };
         let diff = arc.endAngle - arc.startAngle;
         if (diff <= 0) diff += 2 * Math.PI;

@@ -28,6 +28,34 @@ ENDSEC
 EOF
 `;
 
+// ARC di raggio 100mm, da 0° a 90° → lunghezza = π/2 × 100 ≈ 157.08mm
+const DXF_ARC_R100_90DEG = `
+0
+SECTION
+2
+ENTITIES
+0
+ARC
+8
+0
+10
+0.0
+20
+0.0
+30
+0.0
+40
+100.0
+50
+0.0
+51
+90.0
+0
+ENDSEC
+0
+EOF
+`;
+
 // CIRCLE di raggio 50mm → perimetro = 2π×50 ≈ 314.16mm
 const DXF_CIRCLE_R50 = `
 0
@@ -70,6 +98,12 @@ describe('calcolaMetriLineari', () => {
     const result = calcolaMetriLineari(empty);
     expect(result.metriLineari).toBe(0);
     expect(result.entitaCount).toBe(0);
+  });
+
+  it('calcola un arco di 90° r=100mm ≈ 0.1571 metri', () => {
+    const result = calcolaMetriLineari(DXF_ARC_R100_90DEG);
+    expect(result.metriLineari).toBeCloseTo((Math.PI / 2 * 100) / 1000, 4);
+    expect(result.entitaCount).toBe(1);
   });
 
   it('lancia errore per stringa non DXF', () => {
