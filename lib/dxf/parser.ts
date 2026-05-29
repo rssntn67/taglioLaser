@@ -22,14 +22,14 @@ export function calcolaMetriLineari(dxfContent: string): DxfCalcResult {
   for (const e of entities) {
     switch (e.type) {
       case 'LINE': {
-        const line = e as { vertices: Array<{ x: number; y: number }> };
+        const line = e as unknown as { vertices: Array<{ x: number; y: number }> };
         totaleMm += dist2d(line.vertices[0], line.vertices[1]);
         entitaCount++;
         break;
       }
       case 'ARC': {
         // dxf-parser converts DXF degree angles to radians automatically
-        const arc = e as { radius: number; startAngle: number; endAngle: number };
+        const arc = e as unknown as { radius: number; startAngle: number; endAngle: number };
         let diff = arc.endAngle - arc.startAngle;
         if (diff <= 0) diff += 2 * Math.PI;
         totaleMm += arc.radius * diff;
@@ -37,14 +37,14 @@ export function calcolaMetriLineari(dxfContent: string): DxfCalcResult {
         break;
       }
       case 'CIRCLE': {
-        const circle = e as { radius: number };
+        const circle = e as unknown as { radius: number };
         totaleMm += 2 * Math.PI * circle.radius;
         entitaCount++;
         break;
       }
       case 'LWPOLYLINE':
       case 'POLYLINE': {
-        const poly = e as { vertices: Array<{ x: number; y: number }>; shape?: boolean };
+        const poly = e as unknown as { vertices: Array<{ x: number; y: number }>; shape?: boolean };
         const verts = poly.vertices;
         for (let i = 0; i < verts.length - 1; i++) {
           totaleMm += dist2d(verts[i], verts[i + 1]);
@@ -57,7 +57,7 @@ export function calcolaMetriLineari(dxfContent: string): DxfCalcResult {
       }
       case 'ELLIPSE': {
         // Approssimazione di Ramanujan
-        const ellipse = e as {
+        const ellipse = e as unknown as {
           majorAxisEndPoint: { x: number; y: number };
           axisRatio: number;
         };

@@ -38,3 +38,6 @@ next-env.d.ts
 # uploads
 uploads/dxf/*
 !uploads/dxf/.gitkeep
+
+# superpowers brainstorm (internal tooling)
+.superpowers/
