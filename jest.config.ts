@@ -4,7 +4,7 @@ const config: Config = {
   testEnvironment: 'node',
   transform: { '^.+\\.tsx?$': ['ts-jest', {}] },
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/$1' },
-  testPathPattern: '__tests__',
+  testMatch: ['**/__tests__/**/*.{ts,tsx,js}'],
 };
 
 export default config;
