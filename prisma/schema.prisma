@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Material {
+  id          Int         @id @default(autoincrement())
+  nome        String
+  slug        String      @unique
+  thicknesses Thickness[]
+  orders      Order[]
+}
+
+model Thickness {
+  id         Int      @id @default(autoincrement())
+  materialId Int
+  valore     Float
+  material   Material @relation(fields: [materialId], references: [id])
+  price      Price?
+  orders     Order[]
+
+  @@unique([materialId, valore])
+}
+
+model Price {
+  id               Int       @id @default(autoincrement())
+  thicknessId      Int       @unique
+  quotaFissaEur    Float
+  costoPerMetroEur Float
+  thickness        Thickness @relation(fields: [thicknessId], references: [id])
+}
+
+model Order {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  status       OrderStatus @default(PENDING)
+  nome         String
+  email        String
+  azienda      String?
+  pIva         String?
+  note         String?
+  materialId   Int
+  thicknessId  Int
+  quantita     Int
+  metriLineari Float
+  prezzoTotale Float
+  dxfKey       String
+  material     Material    @relation(fields: [materialId], references: [id])
+  thickness    Thickness   @relation(fields: [thicknessId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+}
