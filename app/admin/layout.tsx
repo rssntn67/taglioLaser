@@ -1,12 +1,7 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
 
-export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession();
-  if (!session) redirect('/admin/login');
-
+export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-mist">
       <header className="bg-white border-b border-border">

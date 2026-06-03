@@ -12,7 +12,7 @@ export default async function AdminOrdiniPage() {
 
   const csv = [
     'ID,Data,Nome,Email,Azienda,Materiale,SpessoreID,Quantità,ML,Totale,Stato',
-    ...orders.map((o) =>
+    ...orders.map((o: typeof orders[number]) =>
       [o.id, o.createdAt.toISOString(), o.nome, o.email, o.azienda ?? '', o.material.nome, o.thicknessId, o.quantita, o.metriLineari, o.prezzoTotale, o.status].join(',')
     ),
   ].join('\n');
@@ -43,7 +43,7 @@ export default async function AdminOrdiniPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((o) => (
+            {orders.map((o: typeof orders[number]) => (
               <tr key={o.id} className="border-b border-border last:border-0 hover:bg-mist">
                 <td className="px-4 py-3 font-mono text-xs">
                   <Link href={`/admin/ordini/${o.id}`} className="hover:underline">{o.id}</Link>
