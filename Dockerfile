@@ -12,11 +12,21 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
+
+RUN apk add --no-cache openssl && \
+    addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-RUN mkdir -p uploads/dxf && chown -R nextjs:nodejs uploads
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+
+RUN mkdir -p uploads/dxf && \
+    chown -R nextjs:nodejs uploads node_modules/@prisma node_modules/prisma
+
 USER nextjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD node ./node_modules/prisma/build/index.js migrate deploy && node server.js
